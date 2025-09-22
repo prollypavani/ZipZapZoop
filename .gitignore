@@ -1,0 +1,30 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/ui/node_modules
+
+# Build output
+/ui/.next
+/ui/out
+
+# Miscellaneous
+/ui/.DS_Store
+/ui/*.log
+/ui/npm-debug.log*
+/ui/yarn-debug.log*
+/ui/yarn-error.log*
+/ui/pnpm-debug.log*
+
+# Local environment files
+/ui/.env*.local
+/ui/.env
+
+# Vercel
+/ui/.vercel
+
+# Turbo
+/ui/.turbo
+
+# TypeScript
+/ui/*.tsbuildinfo
+/ui/next-env.d.ts
