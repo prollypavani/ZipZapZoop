@@ -5,6 +5,7 @@ import FileUpload from '@/components/FileUpload';
 import FileDownload from '@/components/FileDownload';
 import InviteCode from '@/components/InviteCode';
 import axios from 'axios';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -82,69 +83,48 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-600 mb-2">ZipZapZoop</h1>
-        <p className="text-xl text-gray-600">Secure P2P File Sharing</p>
+        <h1 className="text-4xl font-extrabold text-foreground mb-2 tracking-tight">
+          ZipZapZoop
+        </h1>
+        <p className="text-xl text-muted-foreground">Secure P2P File Sharing</p>
       </header>
-      
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex border-b mb-6">
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === 'upload'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-            onClick={() => setActiveTab('upload')}
-          >
-            Share a File
-          </button>
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === 'download'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-            onClick={() => setActiveTab('download')}
-          >
-            Receive a File
-          </button>
-        </div>
-        
-        {activeTab === 'upload' ? (
-          <div>
+
+      <div className="nb-card p-6">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'upload' | 'download')}>
+          <TabsList className="mb-4">
+            <TabsTrigger value="upload">Share a File</TabsTrigger>
+            <TabsTrigger value="download">Receive a File</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="upload">
             <FileUpload onFileUpload={handleFileUpload} isUploading={isUploading} />
-            
             {uploadedFile && !isUploading && (
-              <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                <p className="text-sm text-gray-600">
+              <div className="mt-4 p-3 bg-secondary border-2 border-foreground/10 rounded-base">
+                <p className="text-sm text-foreground">
                   Selected file: <span className="font-medium">{uploadedFile.name}</span> ({Math.round(uploadedFile.size / 1024)} KB)
                 </p>
               </div>
             )}
-            
             {isUploading && (
               <div className="mt-6 text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-                <p className="mt-2 text-gray-600">Uploading file...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
+                <p className="mt-2 text-muted-foreground">Uploading file...</p>
               </div>
             )}
-            
             <InviteCode port={port} />
-          </div>
-        ) : (
-          <div>
+          </TabsContent>
+
+          <TabsContent value="download">
             <FileDownload onDownload={handleDownload} isDownloading={isDownloading} />
-            
             {isDownloading && (
               <div className="mt-6 text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-                <p className="mt-2 text-gray-600">Downloading file...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
+                <p className="mt-2 text-muted-foreground">Downloading file...</p>
               </div>
             )}
-          </div>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
-      
     </div>
   );
 }

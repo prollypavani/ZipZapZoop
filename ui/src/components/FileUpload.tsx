@@ -30,22 +30,17 @@ export default function FileUpload({ onFileUpload, isUploading }: FileUploadProp
   return (
     <div 
       {...getRootProps()} 
-      className={`
-        w-full p-8 border-2 border-dashed rounded-lg text-center cursor-pointer transition-all
-        ${dragActive 
-          ? 'border-blue-500 bg-blue-50' 
-          : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
-        }
-        ${isUploading ? 'opacity-50 pointer-events-none' : ''}
-      `}
+      className={`${
+        ''
+      } nb-card w-full p-8 text-center cursor-pointer transition-all ${dragActive ? 'bg-secondary border-foreground' : ''} ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
     >
       <input {...getInputProps()} />
       <div className="flex flex-col items-center justify-center space-y-3">
-        <div className="p-3 bg-blue-100 rounded-full">
-          <FiUpload className="w-6 h-6 text-blue-500" />
+        <div className="p-3 rounded-base border-2 border-border bg-secondary-background">
+          <FiUpload className="w-6 h-6 text-foreground" />
         </div>
-        <p className="text-lg font-medium text-gray-600">Drag & drop a file here, or click to select</p>
-        <p className="text-sm text-gray-500">
+        <p className="text-lg font-semibold text-foreground">Drag & drop a file here, or click to select</p>
+        <p className="text-sm text-muted-foreground">
           Share any file with your peers securely
         </p>
       </div>

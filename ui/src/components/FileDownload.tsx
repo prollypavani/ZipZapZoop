@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { FiDownload } from 'react-icons/fi';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface FileDownloadProps {
   onDownload: (port: number) => Promise<void>;
@@ -31,36 +33,26 @@ export default function FileDownload({ onDownload, isDownloading }: FileDownload
   
   return (
     <div className="space-y-4">
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-        <h3 className="text-lg font-medium text-blue-800 mb-2">Receive a File</h3>
-        <p className="text-sm text-blue-600 mb-0">
-          Enter the invite code shared with you to download the file.
-        </p>
+      <div className="nb-card p-4">
+        <h3 className="text-lg font-semibold text-foreground mb-2">Receive a File</h3>
+        <p className="text-sm text-muted-foreground mb-0">Enter the invite code shared with you to download the file.</p>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="inviteCode" className="block text-sm font-medium text-gray-700 mb-1">
-            Invite Code
-          </label>
-          <input
-            type="text"
+          <label htmlFor="inviteCode" className="block text-sm font-semibold text-foreground mb-1">Invite Code</label>
+          <Input
             id="inviteCode"
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value)}
             placeholder="Enter the invite code (port number)"
-            className="input-field"
             disabled={isDownloading}
             required
           />
-          {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+          {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
         </div>
         
-        <button
-          type="submit"
-          className="btn-primary flex items-center justify-center w-full"
-          disabled={isDownloading}
-        >
+        <Button type="submit" className="w-full" disabled={isDownloading}>
           {isDownloading ? (
             <span>Downloading...</span>
           ) : (
@@ -69,7 +61,7 @@ export default function FileDownload({ onDownload, isDownloading }: FileDownload
               <span>Download File</span>
             </>
           )}
-        </button>
+        </Button>
       </form>
     </div>
   );
