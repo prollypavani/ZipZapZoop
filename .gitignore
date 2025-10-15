@@ -1,30 +1,51 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+############################################################
+# ✅ MAVEN BACKEND (Java Server)
+############################################################
+/target/               # Maven build output
 
-# Dependencies
+# Logs
+*.log
+*.log.*
+
+# IDE junk (optional but recommended)
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+############################################################
+# 🎨 FRONTEND / UI (Next.js / Node in /ui)
+############################################################
 /ui/node_modules
-
-# Build output
 /ui/.next
 /ui/out
 
-# Miscellaneous
-/ui/.DS_Store
+# Local environment files
+/ui/.env
+/ui/.env*.local
+
+# Logs
 /ui/*.log
 /ui/npm-debug.log*
 /ui/yarn-debug.log*
 /ui/yarn-error.log*
 /ui/pnpm-debug.log*
 
-# Local environment files
-/ui/.env*.local
-/ui/.env
+# Misc
+/ui/.DS_Store
 
 # Vercel
 /ui/.vercel
 
-# Turbo
+# Turbo Repo
 /ui/.turbo
 
-# TypeScript
-/ui/*.tsbuildinfo
+# TypeScript build info (Next.js caches)
+.ui/*.tsbuildinfo
 /ui/next-env.d.ts
