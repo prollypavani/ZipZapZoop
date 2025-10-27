@@ -36,15 +36,13 @@ public class FileSharer {
         }
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            // FIX 2: Call .getName() directly on the File object.
             System.out.println("Serving file " + file.getName() + " on port " + port);
             Socket clientSocket = serverSocket.accept();
             System.out.println("Client connection: " + clientSocket.getInetAddress());
-            // FIX 3: Pass the File object to the handler.
             new Thread(new FileSenderHandler(clientSocket, file)).start();
         } catch (Exception ex) {
             System.err.println("Error starting file server on port: " + port);
-            ex.printStackTrace(); // Good practice to print the stack trace
+            ex.printStackTrace(); 
         }
     }
 

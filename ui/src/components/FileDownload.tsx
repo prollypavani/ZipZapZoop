@@ -27,6 +27,7 @@ export default function FileDownload({ onDownload, isDownloading }: FileDownload
     try {
       await onDownload(port);
     } catch (err) {
+      console.error("Download failed:", err);
       setError('Failed to download the file. Please check the invite code and try again.');
     }
   };

@@ -1,16 +1,25 @@
 package p2p.controller;
-import p2p.service.FileSharer;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import org.apache.commons.io.IOUtils;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import org.apache.commons.io.IOUtils;
+
+import p2p.service.FileSharer;
 
 public class FileController {
     private final FileSharer fileSharer;
@@ -93,7 +102,7 @@ public class FileController {
                 
                 String contentTypeMarker = "Content-Type: ";
                 int contentTypeStart = dataAsString.indexOf(contentTypeMarker, filenameEnd);
-                String contentType = "application/octet-stream"; // Default
+                String contentType = "application/octet-stream";
                 
                 if (contentTypeStart != -1) {
                     contentTypeStart += contentTypeMarker.length();
@@ -162,6 +171,12 @@ public class FileController {
         public void handle(HttpExchange exchange) throws IOException {
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
+            headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
             
             if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                 String response = "Method Not Allowed";
@@ -242,6 +257,12 @@ public class FileController {
         public void handle(HttpExchange exchange) throws IOException {
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
+            headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            }
             
             if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
                 String response = "Method Not Allowed";
@@ -262,7 +283,7 @@ public class FileController {
                      InputStream socketInput = socket.getInputStream()) {
                     
                     File tempFile = File.createTempFile("download-", ".tmp");
-                    String filename = "downloaded-file"; // Default filename
+                    String filename = "downloaded-file"; 
                     
                     try (FileOutputStream fos = new FileOutputStream(tempFile)) {
                         byte[] buffer = new byte[4096];
