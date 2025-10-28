@@ -1,17 +1,15 @@
 package p2p.service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
+import p2p.utils.UploadUtils;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-import p2p.utils.UploadUtils;
-
 public class FileSharer {
 
-    private HashMap<Integer, File> availableFiles;
+    private HashMap<Integer, String> availableFiles;
 
     public FileSharer() {
         availableFiles = new HashMap<>();
@@ -22,64 +20,67 @@ public class FileSharer {
         while (true) {
             port = UploadUtils.generateCode();
             if (!availableFiles.containsKey(port)) {
-                availableFiles.put(port, new File(filePath));
+                availableFiles.put(port, filePath);
                 return port;
             }
         }
     }
 
     public void startFileServer(int port) {
-        File file = availableFiles.get(port);
-        if (file == null) {
-            System.out.println("No file found for the given port: " + port);
+        String filePath = availableFiles.get(port);
+        if (filePath == null) {
+            System.err.println("No file associated with port: " + port);
             return;
         }
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Serving file " + file.getName() + " on port " + port);
+            System.out.println("Serving file '" + new File(filePath).getName() + "' on port " + port);
             Socket clientSocket = serverSocket.accept();
-            System.out.println("Client connection: " + clientSocket.getInetAddress());
-            new Thread(new FileSenderHandler(clientSocket, file)).start();
-        } catch (Exception ex) {
-            System.err.println("Error starting file server on port: " + port);
-            ex.printStackTrace(); 
+            System.out.println("Client connected: " + clientSocket.getInetAddress());
+
+            new Thread(new FileSenderHandler(clientSocket, filePath)).start();
+
+        } catch (IOException e) {
+            System.err.println("Error starting file server on port " + port + ": " + e.getMessage());
         }
     }
 
     private static class FileSenderHandler implements Runnable {
-
         private final Socket clientSocket;
-        private final File fileToSend; 
+        private final String filePath;
 
-        public FileSenderHandler(Socket clientSocket, File fileToSend) { 
+        public FileSenderHandler(Socket clientSocket, String filePath) {
             this.clientSocket = clientSocket;
-            this.fileToSend = fileToSend;
+            this.filePath = filePath;
         }
 
         @Override
         public void run() {
-            try (FileInputStream fis = new FileInputStream(fileToSend)) {
-                OutputStream oos = clientSocket.getOutputStream();
-
-                String fileName = fileToSend.getName();
-                String header = "Filename: " + fileName + "\n";
-                oos.write(header.getBytes());
-
+            try (FileInputStream fis = new FileInputStream(filePath);
+                 OutputStream oss = clientSocket.getOutputStream()) {
+                
+                // Send the filename as a header
+                String filename = new File(filePath).getName();
+                String header = "Filename: " + filename + "\n";
+                oss.write(header.getBytes());
+                
+                // Send the file content
                 byte[] buffer = new byte[4096];
-                int byteRead;
-                while ((byteRead = fis.read(buffer)) != -1) {
-                    oos.write(buffer, 0, byteRead);
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    oss.write(buffer, 0, bytesRead);
                 }
-                System.out.println("File " + fileName + " sent to " + clientSocket.getInetAddress());
-            } catch (Exception ex) {
-                System.err.println("Error sending file to the client: " + ex.getMessage());
+                System.out.println("File '" + filename + "' sent to " + clientSocket.getInetAddress());
+            } catch (IOException e) {
+                System.err.println("Error sending file to client: " + e.getMessage());
             } finally {
                 try {
                     clientSocket.close();
-                } catch (Exception ex) {
-                    System.err.println("Error closing client socket: " + ex.getMessage());
+                } catch (IOException e) {
+                    System.err.println("Error closing client socket: " + e.getMessage());
                 }
             }
         }
     }
+
 }

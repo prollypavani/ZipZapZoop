@@ -1,11 +1,15 @@
 package p2p;
-import java.io.IOException;
 
 import p2p.controller.FileController;
+import java.io.IOException;
 
+/**
+ * PeerLink - P2P File Sharing Application
+ */
 public class App {
     public static void main(String[] args) {
         try {
+            // Start the API server on port 8080
             FileController fileController = new FileController(8080);
             fileController.start();
             
