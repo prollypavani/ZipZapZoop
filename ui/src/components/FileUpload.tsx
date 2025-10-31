@@ -30,19 +30,37 @@ export default function FileUpload({ onFileUpload, isUploading }: FileUploadProp
   return (
     <div 
       {...getRootProps()} 
-      className={`${
-        ''
-      } nb-card w-full p-8 text-center cursor-pointer transition-all ${dragActive ? 'bg-secondary border-foreground' : ''} ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+      className={`nb-card w-full p-10 text-center cursor-pointer transition-all duration-300 ${
+        dragActive 
+          ? 'bg-secondary/30 border-secondary scale-105 shadow-[10px_10px_0_0_rgba(0,0,0,0.2)]' 
+          : 'hover:shadow-[10px_10px_0_0_rgba(0,0,0,0.15)] hover:-translate-y-1'
+      } ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
     >
       <input {...getInputProps()} />
-      <div className="flex flex-col items-center justify-center space-y-3">
-        <div className="p-3 rounded-base border-2 border-border bg-secondary-background">
-          <FiUpload className="w-6 h-6 text-foreground" />
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <div className={`p-4 rounded-2xl border-[3px] border-primary bg-primary/10 transition-all duration-300 ${
+          dragActive ? 'animate-bounce-soft scale-110' : ''
+        }`}>
+          <FiUpload className={`w-8 h-8 text-primary transition-transform duration-300 ${
+            dragActive ? 'scale-125' : ''
+          }`} />
         </div>
-        <p className="text-lg font-semibold text-foreground">Drag & drop a file here, or click to select</p>
-        <p className="text-sm text-muted-foreground">
-          Share any file with your peers securely
-        </p>
+        <div className="space-y-2">
+          <p className="text-xl font-bold text-foreground">
+            {dragActive ? 'Drop it here! ' : '📁 Drag & drop a file here'}
+          </p>
+          <p className="text-sm text-muted-foreground font-medium">
+            or click to browse your files
+          </p>
+        </div>
+        <div className="flex gap-2 mt-2">
+          <span className="inline-block px-2 py-1 bg-yellow/20 border-2 border-yellow/40 text-yellow-foreground rounded-lg text-xs font-semibold">
+            Any file type
+          </span>
+          <span className="inline-block px-2 py-1 bg-success/20 border-2 border-success/40 text-success-foreground rounded-lg text-xs font-semibold">
+            Secure transfer
+          </span>
+        </div>
       </div>
     </div>
   );

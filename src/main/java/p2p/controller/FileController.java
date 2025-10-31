@@ -1,17 +1,26 @@
 package p2p.controller;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.apache.commons.io.IOUtils;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+
 import p2p.service.FileSharer;
 
 public class FileController {
@@ -27,7 +36,7 @@ public class FileController {
         this.uploadDir =
             System.getProperty("java.io.tmpdir") +
             File.separator +
-            "peerlink-uploads";
+            "zipzapzoop-uploads";
         this.executorService = Executors.newFixedThreadPool(10);
 
         File uploadDirFile = new File(uploadDir);

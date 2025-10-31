@@ -33,34 +33,54 @@ export default function FileDownload({ onDownload, isDownloading }: FileDownload
   };
   
   return (
-    <div className="space-y-4">
-      <div className="nb-card p-4">
-        <h3 className="text-lg font-semibold text-foreground mb-2">Receive a File</h3>
-        <p className="text-sm text-muted-foreground mb-0">Enter the invite code shared with you to download the file.</p>
+    <div className="space-y-6">
+      <div className="nb-card p-6 bg-gradient-to-br from-accent/10 to-pink/10">
+        <div className="flex items-start gap-3">
+          <div className="text-3xl animate-bounce-soft">📥</div>
+          <div>
+            <h3 className="text-xl font-bold text-foreground mb-2">Receive a File</h3>
+            <p className="text-sm text-muted-foreground font-medium">
+              Enter the invite code shared with you to download the file securely! 
+            </p>
+          </div>
+        </div>
       </div>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="inviteCode" className="block text-sm font-semibold text-foreground mb-1">Invite Code</label>
+          <label htmlFor="inviteCode" className="block text-sm font-bold text-foreground mb-2 flex items-center gap-2">
+            <span>🔑</span> Invite Code
+          </label>
           <Input
             id="inviteCode"
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value)}
-            placeholder="Enter the invite code (port number)"
+            placeholder="Enter the invite code..."
             disabled={isDownloading}
             required
+            className="text-base"
           />
-          {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
+          {error && (
+            <p className="mt-2 text-sm text-destructive font-semibold flex items-center gap-1">
+              {error}
+            </p>
+          )}
         </div>
         
-        <Button type="submit" className="w-full" disabled={isDownloading}>
+        <Button 
+          type="submit" 
+          className="w-full text-base py-6" 
+          disabled={isDownloading}
+        >
           {isDownloading ? (
-            <span>Downloading...</span>
+            <span className="flex items-center gap-2">
+              <span className="animate-spin">⏳</span> Downloading...
+            </span>
           ) : (
-            <>
-              <FiDownload className="mr-2" />
+            <span className="flex items-center gap-2">
+              <FiDownload className="w-5 h-5" />
               <span>Download File</span>
-            </>
+            </span>
           )}
         </Button>
       </form>

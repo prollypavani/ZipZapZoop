@@ -1,6 +1,6 @@
 'use client';
-
 import { useState } from 'react';
+import Image from 'next/image';
 import FileUpload from '@/components/FileUpload';
 import FileDownload from '@/components/FileDownload';
 import InviteCode from '@/components/InviteCode';
@@ -81,15 +81,34 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-extrabold text-foreground mb-2 tracking-tight">
-          ZipZapZoop
-        </h1>
-        <p className="text-xl text-muted-foreground">Secure P2P File Sharing</p>
+    <div className="container mx-auto -mt-40 max-w-4xl">
+      <header className="text-center mb-12 animate-float">
+        <div className="inline-block mb-4">
+        </div>
+        <div className="flex justify-center -mb-50">
+          <Image
+            src="/logo.png"
+            alt="ZipZapZoop Logo"
+            width={500} 
+            height={75} 
+            priority 
+          />
+        </div>
+        <p className="text-xl text-muted-foreground font-medium">Secure P2P File Sharing </p>
+        <div className="mt-4 flex justify-center gap-2">
+          <span className="inline-block px-3 py-1 bg-secondary/30 border-2 border-secondary text-secondary-foreground rounded-full text-sm font-semibold">
+            Fast
+          </span>
+          <span className="inline-block px-3 py-1 bg-primary/30 border-2 border-primary text-primary-foreground rounded-full text-sm font-semibold">
+            Secure
+          </span>
+          <span className="inline-block px-3 py-1 bg-pink/30 border-2 border-pink text-pink-foreground rounded-full text-sm font-semibold">
+            Easy
+          </span>
+        </div>
       </header>
 
-      <div className="nb-card p-6">
+      <div className="nb-card nb-card-hover p-8">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'upload' | 'download')}>
           <TabsList className="mb-4">
             <TabsTrigger value="upload">Share a File</TabsTrigger>
@@ -99,16 +118,25 @@ export default function Home() {
           <TabsContent value="upload">
             <FileUpload onFileUpload={handleFileUpload} isUploading={isUploading} />
             {uploadedFile && !isUploading && (
-              <div className="mt-4 p-3 bg-secondary border-2 border-foreground/10 rounded-base">
-                <p className="text-sm text-foreground">
-                  Selected file: <span className="font-medium">{uploadedFile.name}</span> ({Math.round(uploadedFile.size / 1024)} KB)
-                </p>
+              <div className="mt-6 p-4 bg-secondary/20 border-[3px] border-secondary rounded-base shadow-[4px_4px_0_0_rgba(0,0,0,0.1)]">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">📄</div>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-foreground">
+                      {uploadedFile.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {Math.round(uploadedFile.size / 1024)} KB
+                    </p>
+                  </div>
+                  <div className="text-2xl animate-bounce-soft">✓</div>
+                </div>
               </div>
             )}
             {isUploading && (
               <div className="mt-6 text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
-                <p className="mt-2 text-muted-foreground">Uploading file...</p>
+                <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent"></div>
+                <p className="mt-3 text-muted-foreground font-semibold">Uploading file... </p>
               </div>
             )}
             <InviteCode port={port} />
@@ -118,8 +146,8 @@ export default function Home() {
             <FileDownload onDownload={handleDownload} isDownloading={isDownloading} />
             {isDownloading && (
               <div className="mt-6 text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
-                <p className="mt-2 text-muted-foreground">Downloading file...</p>
+                <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent"></div>
+                <p className="mt-3 text-muted-foreground font-semibold">Downloading file... </p>
               </div>
             )}
           </TabsContent>
