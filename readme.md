@@ -1,54 +1,72 @@
-# ZipZapZoop 
+<div align="center">
 
-<img width="2556" height="2241" alt="sharefile" src="https://github.com/user-attachments/assets/895a9fc2-470f-4dbb-abc5-fc24789a52c3" />
+  <h1>ZipZapZoop</h1>
+  <p><strong>A Minimalist P2P File Sharing System</strong></p>
+  <img src="https://github.com/user-attachments/assets/895a9fc2-470f-4dbb-abc5-fc24789a52c3" alt="ZipZapZoop Banner" width="600" />
 
-## What this project is
+  <p>
+    <img src="https://img.shields.io/badge/Java-11%2B-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java" />
+    <img src="https://img.shields.io/badge/Framework-Maven-C71A36?style=flat-square&logo=apachemaven&logoColor=white" alt="Maven" />
+    <img src="https://img.shields.io/badge/Frontend-Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/Status-Prototype-blue?style=flat-square" alt="Status" />
+  </p>
+</div>
 
-ZipZapZoop is a p2p filesharing system that lets a user upload a file to the Java backend, which then offers the file on a random dynamic port (used as an "invite code"). Another user (or the same user from another machine/tab) can provide that invite code to download the file directly from the host using a socket connection.
+## Overview
 
-This repo contains a Java backend (API + file server) and a Next.js frontend (in `web/`) that shows a modern UI for upload / download.
+ZipZapZoop is a P2P file sharing system that enables secure, direct file transfers between users. Upload a file to the Java backend, receive a unique invite code, and share files directly with anyone using a socket connection. Perfect for quick, temporary file sharing without relying on cloud storage.
 
-## Project layout
+### Key Features
 
-- `src/main/java/p2p` — Java backend
-  - `App.java` — main entry point (starts the API server)
-  - `controller/FileController.java` — HTTP API: `/upload` (POST) and `/download/{port}` (GET)
-  - `service/FileSharer.java` — manages offered files and starts per-file ServerSockets
-  - `utils/UploadUtils.java` — generates random dynamic port codes
-- `web/` — Next.js frontend
-  - `web/src/components` — React components such as `FileUpload.tsx`, `FileDownload.tsx`, `InviteCode.tsx`
+- 🚀 **Direct P2P Transfer** — Files transfer directly from host to recipient via TCP
+- 🔑 **Invite Code System** — Share files using simple, randomly-generated codes
+- 🎯 **Drag & Drop Interface** — Modern, intuitive Next.js frontend
+- ⚡ **Lightweight Architecture** — No database required, uses OS temp directory
+- 🔒 **Ephemeral Storage** — Files exist only for the duration of the transfer
 
-## Features
+---
 
-- Drag & drop file upload
-- Invite-code based sharing (random dynamic port serves as invite code)
-- Direct TCP file transfer from host to client (simple header + file bytes)
-- Lightweight backend (no database) — files are stored in the OS temp directory
+## Architecture
 
-## Requirements
+### Backend (Java)
+- `src/main/java/p2p/App.java` — Application entry point and API server initialization
+- `src/main/java/p2p/controller/FileController.java` — REST endpoints for upload and download
+- `src/main/java/p2p/service/FileSharer.java` — File server management and ServerSocket orchestration
+- `src/main/java/p2p/utils/UploadUtils.java` — Dynamic port generation utilities
 
-- Java 11+
-- Maven
-- Node 18+ and npm (for frontend)
+### Frontend (Next.js)
+- `web/src/components/FileUpload.tsx` — Drag-and-drop upload interface
+- `web/src/components/FileDownload.tsx` — Download interface with invite code input
+- `web/src/components/InviteCode.tsx` — Invite code display and sharing
 
-## Quick start (recommended)
+---
 
-1. Build the Java backend
+## Getting Started
+
+### Prerequisites
+
+- **Java:** Version 11 or higher
+- **Maven:** For building the backend
+- **Node.js:** Version 18 or higher
+- **npm:** For frontend dependencies
+
+### Installation & Setup
+
+#### 1. Build the Backend
 
 ```bash
 mvn -f ./pom.xml clean package
 ```
 
-2. Run the backend
+#### 2. Start the Backend Server
 
 ```bash
-# Run the built jar (use the jar produced in target/)
 java -jar target/*.jar
 ```
 
-The backend starts an HTTP API (default port 8080 as launched by `App.java`).
+The API server will start on port 8080 by default.
 
-3. Run the frontend
+#### 3. Launch the Frontend
 
 ```bash
 cd web
@@ -56,44 +74,95 @@ npm install
 npm run dev
 ```
 
-Open the frontend at http://localhost:3000
+Access the application at `http://localhost:3000`
 
-## HTTP API (important endpoints)
+---
 
-- POST /upload — upload a file as multipart/form-data. Response: JSON {"port": <portNumber>}
-  - The backend saves the uploaded file to a temp directory, asks `FileSharer` to reserve a dynamic port and start a ServerSocket on that port.
-- GET /download/{port} — download a file from the given port. The backend opens a socket to `localhost:{port}` to fetch file bytes served by the file server, then streams it back as an HTTP attachment.
+## API Reference
 
-Notes:
-- Invite code = TCP port (random value in dynamic range 49152–65535).
-- The file server currently accepts a single connection for each offered file; after one successful transfer the server socket is closed.
+### Upload File
 
-## Demo (manual steps)
+**Endpoint:** `POST /upload`
 
-1. On the host machine: open the frontend, upload a file using the drag-and-drop component.
-2. After upload the UI shows an invite code (port). Copy the code.
-3. On the receiver machine (or another browser tab): enter the invite code in the download UI and click Download.
-4. The receiver will receive the file as an HTTP attachment.
+**Content-Type:** `multipart/form-data`
 
-## Quick curl examples (for testing)
-
-Upload (replace `yourfile.bin`):
-
-```bash
-curl -v -F "file=@yourfile.bin" http://localhost:8080/upload
+**Response:**
+```json
+{
+  "port": 49612
+}
 ```
 
-Response example: `{"port": 49612}`
+Uploads a file and returns a unique port number (invite code) for sharing.
 
-Download (replace port with returned port):
+### Download File
 
+**Endpoint:** `GET /download/{port}`
+
+**Parameters:**
+- `port` — The invite code received from the upload response
+
+**Response:** Binary file stream with appropriate content headers
+
+---
+
+## Usage Example
+
+### Web Interface
+
+1. **Host:** Navigate to `http://localhost:3000` and drag-and-drop your file
+2. **Share:** Copy the generated invite code displayed in the UI
+3. **Recipient:** Enter the invite code in the download section and click Download
+
+### Command Line (cURL)
+
+**Upload a file:**
 ```bash
-curl -v http://localhost:8080/download/49612 -o received.bin
+curl -F "file=@document.pdf" http://localhost:8080/upload
 ```
 
-## Limitations & Security
+**Download using invite code:**
+```bash
+curl http://localhost:8080/download/49612 -o downloaded-file.pdf
+```
 
-- No authentication or encryption. Not suitable for production.
-- Uses raw TCP and system dynamic ports — NAT/Firewall/NAT traversal is not handled.
-- File servers are served on ephemeral ports; quality of service and concurrent transfers are minimal.
+---
+
+## How It Works
+
+1. **File Upload:** User uploads a file via HTTP POST to `/upload`
+2. **Port Allocation:** Backend generates a random dynamic port (49152–65535) and starts a ServerSocket
+3. **Invite Code:** The port number serves as the invite code
+4. **File Transfer:** Recipient uses the invite code to download via `/download/{port}`
+5. **Direct Connection:** Backend proxies the TCP connection, streaming file bytes directly
+6. **Cleanup:** ServerSocket closes after successful transfer
+
+---
+
+## Security Considerations
+
+> **⚠️ WARNING:** This is a demonstration project and should not be used in production environments.
+
+- **No Authentication** — Anyone with an invite code can download files
+- **No Encryption** — Data is transmitted in plaintext over TCP
+- **No NAT Traversal** — Limited to local networks or requires port forwarding
+- **Single Transfer** — Each file server accepts only one connection
+- **Temporary Storage** — Files stored in OS temp directory without cleanup guarantees
+
+### Recommended Use Cases
+
+- Development and testing environments
+- Local network file transfers
+- Educational demonstrations of P2P concepts
+- Prototype and proof-of-concept projects
+
+---
+
+## Technical Limitations
+
+- Dynamic port allocation may conflict with firewall rules
+- No concurrent download support for the same file
+- File size limited by available memory and disk space
+- No resume capability for interrupted transfers
+- Invite codes (ports) may be reused after server restart
 
