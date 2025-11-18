@@ -1,6 +1,8 @@
 # ZipZapZoop 
 > Lightweight peer-to-peer file sharing demo used for demonstrations and vivas.
 
+<img width="2556" height="2241" alt="sharefile" src="https://github.com/user-attachments/assets/895a9fc2-470f-4dbb-abc5-fc24789a52c3" />
+
 ## What this project is
 
 ZipZapZoop is a small demo that lets a user upload a file to the Java backend, which then offers the file on a random dynamic port (used as an "invite code"). Another user (or the same user from another machine/tab) can provide that invite code to download the file directly from the host using a socket connection.
