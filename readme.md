@@ -18,11 +18,11 @@ ZipZapZoop is a P2P file sharing system that enables secure, direct file transfe
 
 ### Key Features
 
-- 🚀 **Direct P2P Transfer** — Files transfer directly from host to recipient via TCP
-- 🔑 **Invite Code System** — Share files using simple, randomly-generated codes
-- 🎯 **Drag & Drop Interface** — Modern, intuitive Next.js frontend
-- ⚡ **Lightweight Architecture** — No database required, uses OS temp directory
-- 🔒 **Ephemeral Storage** — Files exist only for the duration of the transfer
+- **Direct P2P Transfer** — Files transfer directly from host to recipient via TCP
+- **Invite Code System** — Share files using simple, randomly-generated codes
+- **Drag & Drop Interface** — Modern, intuitive Next.js frontend
+- **Lightweight Architecture** — No database required, uses OS temp directory
+- **Ephemeral Storage** — Files exist only for the duration of the transfer
 
 ---
 
